@@ -1,0 +1,14 @@
+<div
+  class="w3-row w3-col w3-container border border-dark rounded-3 w3-section"
+>
+    <p class="text-center">Hoy le toca a: {{afortunadoXtoday}}</p>
+    <p class="text-center">Mañana le toca a: {{afortunadoXtomorrow}}</p>
+    <p class="w3-col border border-dark border-2"></p>
+  <p class="text-uppercase text-center">Listado del MES</p>
+  <ul class="set-height-s-40 w3-ul w3-row w3-col bg-secondary bg-opacity-75 rounded-1">
+    @for (item of personXMonth; track item; let idx = $index, e = $even) { 
+        <li class="w3-row w3-col">  <label class="w3-col l12 m12 s12 fw-bold p-2 text-warning"> {{item}}</label></li>
+        
+    } @empty {  <li> There are no items. </li>}
+  </ul>
+</div>
