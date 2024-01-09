@@ -1,8 +1,8 @@
 <div class="w3-row w3-col w3-container border border-dark rounded-3 w3-section" >
     <p class="text-uppercase text-center">Listado de Personas</p>
-  <ul class="w3-ul w3-row w3-col bg-secondary bg-opacity-75 rounded-1" >
+  <ul class="w3-ul w3-row w3-col" >
     @for (item of listPersons; track item.namePerson) {
-    <li class="w3-row w3-col"> <span class=" w3-col l2 m2 s2 text-center border border-warning p-2 rounded-4 ">{{ item.ID }}</span>  <label class="w3-col l8 m8 s8 fw-bold p-2 text-warning">{{ item.namePerson }}</label></li>
+    <li class="w3-row w3-col _center-h"> <span class=" w3-col l2 m2 s2 text-center text-white border border-warning p-2  bg-dark bg-opacity-75 rounded-1 ">{{ item.ID }}</span>  <label class="w3-col l8 m8 s8 fw-bold p-2 bg-dark bg-opacity-75 rounded-1 text-warning">{{ item.namePerson }}</label></li>
     } @empty {
     <li>There are no items.</li>
     }

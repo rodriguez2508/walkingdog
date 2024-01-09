@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+ import { Component, OnInit } from '@angular/core';
+ 
 
 // Definir la interfaz personInterface
 interface personInterface {
@@ -10,20 +11,30 @@ interface personInterface {
   selector: 'app-showuser',
   standalone: true,
   imports: [],
+  providers:[],
   templateUrl: './showuser.component.html',
   styleUrl: './showuser.component.scss'
 })
-export class ShowuserComponent {
+export class ShowuserComponent  {
 
-  // Crear una lista de personas en formato JSON
-listPersons: personInterface[] = [
-  { ID: 1, namePerson: "Osmain Rodriguez" },
-  { ID: 2, namePerson: "Joan Rodriguez" },
-  { ID: 3, namePerson: "Jean Carlos Rodriguez" }
-];
+  // Obtener la lista de personas
+  listPersons: personInterface[] = [
+    { ID: 1, namePerson: "Osmain Rodriguez" },
+    { ID: 2, namePerson: "Jean Carlos Rodriguez" },
+    { ID: 3, namePerson: "Joan Rodriguez" }
+  ];
 
-  constructor(){
 
-  }
+  currentDate: Date = new Date();
+  daysInMonth: number[] = [];
+  currentPersonIndex: number = 0;
+
+  constructor() {
+     
+   }
+
+  
+ 
+
 
 }

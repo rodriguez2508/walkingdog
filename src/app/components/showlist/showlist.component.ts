@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { DatePipe } from '@angular/common';
-
+import { Component, OnInit } from '@angular/core';
+ 
 // Definir la interfaz personInterface
 interface personInterface {
   ID: number;
@@ -10,54 +9,133 @@ interface personInterface {
   selector: 'app-showlist',
   standalone: true,
   imports: [],
+  providers: [],
   templateUrl: './showlist.component.html',
   styleUrl: './showlist.component.scss'
 })
-export class ShowlistComponent {
+export class ShowlistComponent implements OnInit {
 
-  // Obtener la lista de personas
+  // -- Obtener la lista de personas
+  // --
   listPersons: personInterface[] = [
     { ID: 1, namePerson: "Osmain Rodriguez" },
     { ID: 2, namePerson: "Jean Carlos Rodriguez" },
     { ID: 3, namePerson: "Joan Rodriguez" }
   ];
-
-  // Obtener todos los días del mes actual
-  today: Date = new Date();
-  year: number = this.today.getFullYear();
-  month: number = this.today.getMonth();
-  daysInMonth: Date[] = [];
+ 
+  // -- Obtener fechas actuales
+  // --
+  currentYear = new Date().getFullYear();
+  currentMonth = new Date().getMonth();
+  currentDay = new Date().getDate();
+  nextDay:number = this.getNextDay();
+   
+  // -- crear la lista para mostrar de las personas X dias 
+  // --
   personXMonth: string[] = [];
+  dayXMonth: string[] = [];
+
+  currentDate: Date = new Date();
+  daysInMonth: number[] = []; 
+
+  // -- Crear la persona que le toca sacar al perro el dia actual y siguiente
+  // --
   afortunadoXtoday: string = "";
   afortunadoXtomorrow: string = "";
 
   constructor() {
-    console.log(this.month)
-    this.getDaysInMonth(this.month, this.year);
   }
-  // Función para obtener todos los días del mes
-  getDaysInMonth(month: number = this.month, year: number = this.year) {
 
-    for (let day = 1; day <= new Date(year, month + 1, 0).getDate(); day++) {
-      this.daysInMonth.push(new Date(year, month, day));
+
+
+  ngOnInit(): void {
+    // this.generateDaysInMonth();
+    // this.setCurrentPerson();
+
+    this.getDaysWithPersons();
+    this.getNextDay();
+  }
+
+
+  generateDaysInMonth(): void {
+    const daysInMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0).getDate();
+    for (let i = 1; i <= daysInMonth; i++) {
+      this.daysInMonth.push(i);
     }
-
-    // Mostrar el día de la semana junto con el nombre de la persona correspondiente
-    let i = 0;
-    this.daysInMonth.forEach(day => {
-
-      let personIndex = this.daysInMonth.indexOf(day) % this.listPersons.length;
-      let person = this.listPersons[personIndex];
-      // console.log();
-
-      if ((i+1) == new Date().getDate()) this.afortunadoXtoday = person.namePerson;
-      if ((i+1) == (new Date().getDate() + 1)) this.afortunadoXtomorrow = person.namePerson;
-      this.personXMonth[i] = day.toLocaleDateString('es-ES', { weekday: 'long' }) + ' ' + ( i + 1 ) +": " + person.namePerson;
-      // console.log(day.toLocaleDateString('es-ES', { weekday: 'long' }) + ": " + person.namePerson);
-      i++;
-    });
-
-    return this.personXMonth;
   }
+
+  // --------
+  // --------
+  // --------
+
+  getDaysWithPersons(): void {
+    for (let month = 0; month < 12; month++) {
+
+
+      if (month == this.currentMonth) {
+
+        const daysInMonth = new Date(this.currentYear, month + 1, 0).getDate();
+
+        for (let day = 1; day <= daysInMonth; day++) {
+          const totalDays = this.getDaysFromStart(month, day);
+          const personIndex = totalDays % this.listPersons.length;
+          const person = this.listPersons[personIndex];
+          // console.log(`El día ${day} de ${this.getMonthName(month)} le toca a ${person.namePerson} sacar al perro.`);
+
+          if (this.currentDate.getDate() - 1 == (day - 1)) this.afortunadoXtoday = `${this.listPersons[personIndex].namePerson}`
+
+          if (this.currentDate.getDate() == (day - 1)) this.afortunadoXtomorrow = `${this.listPersons[personIndex].namePerson}`
+
+          // -- Establece el dia y persona que le tocara sacar al perro para mostrarlo en la vista
+          // --
+          this.dayXMonth[day - 1] = `${day} de ${this.getMonthName(month)}`;
+          this.personXMonth[day - 1] = `${person.namePerson}`;
+
+        }
+        break;
+
+      }
+
+
+    }
+  }
+
+  private getDaysFromStart(month: number, day: number): number {
+    let totalDays = 0;
+    for (let m = 0; m < month; m++) {
+      const daysInMonth = new Date(this.currentYear, m + 1, 0).getDate();
+      totalDays += daysInMonth;
+    }
+    totalDays += day - 1;
+    return totalDays;
+  }
+
+
+  private getMonthName(month: number): string {
+    const monthNames = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    return monthNames[month];
+  }
+
+
+  getNextDay(): number {
+    const currentDate = new Date(this.currentYear, this.currentMonth, this.currentDay);
+    const nextDayTimestamp = currentDate.getTime() + 24 * 60 * 60 * 1000; // Agrega un día en milisegundos
+    const nextDate = new Date(nextDayTimestamp);
+  
+    // Comprueba si cambió el mes y ajusta el día si es necesario
+    if (nextDate.getMonth() !== this.currentMonth) {
+      return new Date(this.currentYear, this.currentMonth + 1, 1).getDate(); // Primer día del mes siguiente
+    } 
+    return nextDate.getDate();
+  }
+
+  // --------
+  // --------
+  // --------
+
+
+
+ 
+
 
 }
